@@ -40,7 +40,7 @@ namespace Test.Membership.Pages
                 {
                     #region Limit User
                     var entity = new LoginRow();
-                    entity.UserId = ((UserDefinition)Authorization.UserDefinition).UserId;
+                    entity.UserName = username;
                     entity.SessionId = System.Web.HttpContext.Current.Session.SessionID;
                     entity.LoggedIn = true;
 
@@ -66,7 +66,7 @@ namespace Test.Membership.Pages
         {
             #region Limit User
             var entity = new LoginRow();
-            entity.UserId = ((UserDefinition)Authorization.UserDefinition).UserId;
+            entity.UserName = Authorization.Username;
             entity.SessionId = System.Web.HttpContext.Current.Session.SessionID;
             new LoginRepository().Delete(entity); 
             #endregion
