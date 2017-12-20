@@ -14,7 +14,7 @@ namespace Test.Membership
             var connection = SqlConnections.NewFor<MyRow>();
 
             var q = new SqlQuery().Select("*").From(MyRow.Fields.TableName, new Alias("T0"))
-                    .Where(new Criteria(MyRow.Fields.UserId) == request.UserId.Value &&
+                    .Where(new Criteria(MyRow.Fields.UserName) == request.UserName &&
                            new Criteria(MyRow.Fields.SessionId) == request.SessionId);
 
             var result = connection.Query<MyRow>(q);
@@ -38,7 +38,7 @@ namespace Test.Membership
             UnitOfWork uow = new UnitOfWork(connection);
 
             new SqlInsert(MyRow.Fields.TableName)
-                    .Set(fld.UserId, request.UserId)
+                    .Set(fld.UserName, request.UserName)
                     .Set(fld.SessionId, request.SessionId)
                     .Set(fld.LoggedIn, request.LoggedIn)
                     .Execute(connection);
@@ -52,7 +52,7 @@ namespace Test.Membership
 
             new SqlUpdate(MyRow.Fields.TableName)
                     .Set(MyRow.Fields.LoggedIn, request.LoggedIn)
-                    .Where(new Criteria(MyRow.Fields.UserId) == request.UserId.Value &&
+                    .Where(new Criteria(MyRow.Fields.UserName) == request.UserName &&
                            new Criteria(MyRow.Fields.SessionId) == request.SessionId)
                     .Execute(uow.Connection, ExpectedRows.Ignore);
 
@@ -65,7 +65,7 @@ namespace Test.Membership
             UnitOfWork uow = new UnitOfWork(connection);
 
             new SqlDelete(MyRow.Fields.TableName)
-                .Where(new Criteria(MyRow.Fields.UserId) == request.UserId.Value &&
+                .Where(new Criteria(MyRow.Fields.UserName) == request.UserName &&
                        new Criteria(MyRow.Fields.SessionId) == request.SessionId)
                 .Execute(uow.Connection, ExpectedRows.Ignore);
 
