@@ -10,11 +10,11 @@ namespace Test.Membership
     [ModifyPermission(PermissionKeys.Security)]
     public sealed class LoginLimitRow : Row
     {
-        [DisplayName("User Id")]
-        public Int32? UserId
+        [DisplayName("User Name")]
+        public String UserName
         {
-            get { return Fields.UserId[this]; }
-            set { Fields.UserId[this] = value; }
+            get { return Fields.UserName[this]; }
+            set { Fields.UserName[this] = value; }
         }
 
         [DisplayName("Session Id")]
@@ -40,7 +40,7 @@ namespace Test.Membership
 
         public class RowFields : RowFieldsBase
         {
-            public Int32Field UserId;
+            public StringField UserName;
             public StringField SessionId;
             public BooleanField LoggedIn;
 
