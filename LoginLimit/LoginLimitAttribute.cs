@@ -18,25 +18,31 @@ namespace Test.Membership
 
             // check to see if your ID in the Logins table has LoggedIn = true 
             // if so, continue, otherwise, redirect to Login page.
-            var userId = ((UserDefinition)Authorization.UserDefinition).UserId;
-            if (LoginLimit.IsYourLoginStillTrue(userId, ctx.Session["sessionid"].ToString()))
+            var userName = Authorization.Username;
+            if (LoginLimit.IsYourLoginStillTrue(userName, ctx.Session["sessionid"].ToString()))
             {
                 // Check to see if your user ID is being used elsewhere under a different session ID
-                if (!LoginLimit.IsUserLoggedOnElsewhere(userId, ctx.Session["sessionid"].ToString()))
+                if (!LoginLimit.IsUserLoggedOnElsewhere(userName, ctx.Session["sessionid"].ToString()))
                 {
+                    // Here the user has only access from this session, then OK
                     base.OnActionExecuting(filterContext);
                 }
                 else
                 {
-                    // if it is being used elsewhere, update all their Logins records to LoggedIn = false, except for your session ID
-                    LoginLimit.LogEveryoneElseOut(userId, ctx.Session["sessionid"].ToString());
+                    // Here the user has other access. Then ask you if you want
+                    // force logout on other position.
+
+
+                    // if it is being used elsewhere, update all their Logins 
+                    // records to LoggedIn = false, except for your session ID
+                    LoginLimit.LogEveryoneElseOut(userName, ctx.Session["sessionid"].ToString());
                     base.OnActionExecuting(filterContext);
                 }
             }
             else
             {
                 filterContext.Result = new RedirectResult("~/Account/Signout");
-                WebSecurityHelper.LogOut();
+                //WebSecurityHelper.LogOut();
                 return;
             }
         }
