@@ -6,11 +6,11 @@ namespace Test.Membership
 {
     public static class LoginLimit
     {
-        public static bool IsYourLoginStillTrue(int userId, string sid)
+        public static bool IsYourLoginStillTrue(string userName, string sid)
         {
             var q = new SqlQuery().Select("*").From(LoginLimitRow.Fields.TableName, new Alias("T0"))
                     .Where(new Criteria(LoginLimitRow.Fields.LoggedIn) == 1 &&
-                          new Criteria(LoginLimitRow.Fields.UserId) == userId &&
+                          new Criteria(LoginLimitRow.Fields.UserName) == userName &&
                           new Criteria(LoginLimitRow.Fields.SessionId) == sid);
 
             var connection = SqlConnections.NewFor<LoginLimitRow>();
@@ -29,11 +29,11 @@ namespace Test.Membership
             return false;
         }
 
-        public static bool IsUserLoggedOnElsewhere(int userId, string sid)
+        public static bool IsUserLoggedOnElsewhere(string userName, string sid)
         {
             var q = new SqlQuery().Select("*").From(LoginLimitRow.Fields.TableName, new Alias("T0"))
                     .Where(new Criteria(LoginLimitRow.Fields.LoggedIn) == 1 &&
-                          new Criteria(LoginLimitRow.Fields.UserId) == userId &&
+                          new Criteria(LoginLimitRow.Fields.UserName) == userName &&
                           new Criteria(LoginLimitRow.Fields.SessionId) != sid);
 
             var connection = SqlConnections.NewFor<LoginLimitRow>();
@@ -52,11 +52,11 @@ namespace Test.Membership
             return false;
         }
 
-        public static void LogEveryoneElseOut(int userId, string sid)
+        public static void LogEveryoneElseOut(string userName, string sid)
         {
             var q = new SqlQuery().Select("*").From(LoginLimitRow.Fields.TableName, new Alias("T0"))
                     .Where(new Criteria(LoginLimitRow.Fields.LoggedIn) == 1 &&
-                          new Criteria(LoginLimitRow.Fields.UserId) == userId &&
+                          new Criteria(LoginLimitRow.Fields.UserName) == userName &&
                           new Criteria(LoginLimitRow.Fields.SessionId) != sid);
 
             List<LoginLimitRow> list = new List<LoginLimitRow>();
@@ -72,7 +72,7 @@ namespace Test.Membership
                         new LoginLimitRepository().Update(connection,
                             new LoginLimitRow()
                             {
-                                UserId = item.UserId,
+                                UserName = item.UserName,
                                 SessionId = item.SessionId,
                                 LoggedIn = false
                             }
