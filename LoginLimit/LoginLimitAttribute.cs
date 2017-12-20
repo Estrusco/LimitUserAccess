@@ -35,7 +35,7 @@ namespace Test.Membership
             }
             else
             {
-                filterContext.Result = new RedirectResult("~/Account/Login");
+                filterContext.Result = new RedirectResult("~/Account/Signout");
                 WebSecurityHelper.LogOut();
                 return;
             }
