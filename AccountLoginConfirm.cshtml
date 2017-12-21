@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "Login";
+    ViewData["PageId"] = "Login";
+    Layout = MVC.Views.Shared._LayoutNoNavigation;
+}
+@section Head {
+    <link rel="stylesheet" href="~/Scripts/vegas/vegas.css" />
+    <script src="~/Scripts/vegas/vegas.min.js"></script>
+}
+
+<script id="Template_Membership_LoginPanel" type="text/template">
+<div class="flex-layout animated bounceInDown" >
+    <h3 style="color: white"><b>WARNING!</b><br />The user with you are trying to access is already logged in to another location.<br /><br />
+        If you try to login now, you will be force disconnection of user from the other location, with possible data loss.<br /><br />
+<i>Are you sure you want to force the other user to exit?</i></h3>
+    <br />
+    <h3 id="titolo">@Texts.Forms.Membership.Login.FormTitle</h3>
+    <form id="~_Form" action="">
+        <img id="logo" class="img-responsive center-block" src=@Url.Content("~/Content/images/logo.png") />
+        <div class="s-Form">
+            <div class="fieldset ui-widget ui-widget-content ui-corner-all">
+                <div id="~_PropertyGrid"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="buttons">
+                <button id="~_LoginButton" type="submit" class="btn btn-primary">
+                    @Texts.Forms.Membership.Login.SignInButton
+                </button>
+            </div>
+            <div class="actions">
+                <a href="@Url.Content("~/Account/ForgotPassword")"><i class="fa fa-angle-right"></i>&nbsp;@Texts.Forms.Membership.Login.ForgotPassword</a>
+                <a href="@Url.Content("~/Account/SignUp")"><i class="fa fa-angle-right"></i>&nbsp;@Texts.Forms.Membership.Login.SignUpButton</a>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </form>
+</div>
+</script>
+
+@if (SiteInitialization.SkippedMigrations)
+{
+<div class="alert alert-error alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4><i class="icon fa fa-warning"></i> Warning!</h4>
+    Test skipped running migrations to avoid modifying an arbitrary database.
+    If you'd like to run migrations on this database, remove the safety check 
+    in SiteInitialization.RunMigrations method.
+</div>
+}
+
+@if (ViewBag.Activated != null)
+{
+<div class="alert alert-info alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4><i class="icon fa fa-info"></i>@LocalText.Get("Dialogs.InformationTitle")</h4>
+    @Texts.Forms.Membership.SignUp.ActivationCompleteMessage
+</div>
+}
+
+<div class="page-content">
+    <div id="LoginPanel">
+
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    jQuery(function() {
+        new Test.Membership.LoginPanel($('#LoginPanel')).init();
+        @if (ViewBag.Activated != null)
+        {
+            <text>
+            $(function() {
+                $('#Test_Membership_LoginPanel0_Username').val(@Html.Raw(Serenity.JSON.Stringify(ViewBag.Activated)));
+                $('#Test_Membership_LoginPanel0_Password').focus();
+            });
+            </text>
+        }
+    });
+</script>
