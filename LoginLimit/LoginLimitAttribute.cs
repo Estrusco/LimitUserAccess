@@ -29,20 +29,34 @@ namespace Test.Membership
                 }
                 else
                 {
-                    // Here the user has other access. Then ask you if you want
-                    // force logout on other position.
+                    // Here the user has other access. 
+                    // Then ask you if you want force logout on other position.
 
-
-                    // if it is being used elsewhere, update all their Logins 
-                    // records to LoggedIn = false, except for your session ID
-                    LoginLimit.LogEveryoneElseOut(userName, ctx.Session["sessionid"].ToString());
-                    base.OnActionExecuting(filterContext);
+                    // Force Logout indicate if came from LoginConfirmation page to force logout
+                    var forceLogout = ctx.Session["forceLogout"];
+                    if (forceLogout == null)
+                    {
+                        // The user has attempted to access, but there is same user
+                        // logged somewhere. Remove loginlimit record created in login
+                        // to simulate the his never logged
+                        LoginLimit.SignOut();
+                        // Redirect to confirm force logout page
+                        filterContext.Result = new RedirectResult("~/Account/LoginConfirm");
+                        return;
+                    }
+                    else
+                    {
+                        // if it is being used elsewhere, update all their Logins 
+                        // records to LoggedIn = false, except for your session ID
+                        LoginLimit.LogEveryoneElseOut(userName, ctx.Session["sessionid"].ToString());
+                        ctx.Session["forceLogout"] = null;
+                        base.OnActionExecuting(filterContext);
+                    }
                 }
             }
             else
             {
                 filterContext.Result = new RedirectResult("~/Account/Signout");
-                //WebSecurityHelper.LogOut();
                 return;
             }
         }
