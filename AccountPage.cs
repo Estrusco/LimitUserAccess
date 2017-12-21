@@ -27,7 +27,7 @@ namespace Test.Membership.Pages
         [HttpPost, JsonFilter]
         public Result<ServiceResponse> Login(LoginRequest request)
         {
-            return (this).ExecuteMethod(() =>
+            return this.ExecuteMethod(() =>
             {
                 request.CheckNotNull();
 
