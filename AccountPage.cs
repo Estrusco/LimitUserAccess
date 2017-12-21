@@ -47,6 +47,16 @@ namespace Test.Membership.Pages
             });
         }
 
+        [HttpGet]
+        public ActionResult LoginConfirm(string activated)
+        {
+            ViewData["Activated"] = activated;
+            ViewData["HideLeftNavigation"] = true;
+            Session["forceLogout"] = true;
+
+            return View(MVC.Views.Membership.Account.AccountLoginConfirm);
+        }
+
         private ActionResult Error(string message)
         {
             return View(MVC.Views.Errors.ValidationError,
