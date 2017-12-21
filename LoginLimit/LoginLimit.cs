@@ -1,11 +1,45 @@
+using Serenity;
 using Serenity.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
 namespace Test.Membership
 {
     public static class LoginLimit
     {
+        /// <summary>
+        /// Create login record for user
+        /// </summary>
+        public static void SignIn(string username, HttpSessionStateBase session)
+        {
+            var entity = new LoginLimitRow
+            {
+                UserName = username,
+                SessionId = HttpContext.Current.Session.SessionID,
+                LoggedIn = true
+            };
+
+            new LoginLimitRepository().CreateOrUpdate(entity);
+            new LoginLimitRepository().CleanForUser(username);
+
+            session["sessionid"] = HttpContext.Current.Session.SessionID;
+        }
+
+        /// <summary>
+        /// Delete login record for current user
+        /// </summary>
+        public static void SignOut()
+        {
+            var entity = new LoginLimitRow
+            {
+                UserName = Authorization.Username,
+                SessionId = HttpContext.Current.Session.SessionID
+            };
+
+            new LoginLimitRepository().Delete(entity);
+        }
+
         public static bool IsYourLoginStillTrue(string userName, string sid)
         {
             var q = new SqlQuery().Select("*").From(LoginLimitRow.Fields.TableName, new Alias("T0"))
