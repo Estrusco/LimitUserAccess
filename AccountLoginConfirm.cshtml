@@ -10,9 +10,10 @@
 
 <script id="Template_Membership_LoginPanel" type="text/template">
 <div class="flex-layout animated bounceInDown" >
-    <h3 style="color: white"><b>WARNING!</b><br />The user with you are trying to access is already logged in to another location.<br /><br />
+    <h3 style="color: white"><b style="color: red">WARNING!</b><br />The user with you are trying to access is already logged in to another location.<br /><br />
         If you try to login now, you will be force disconnection of user from the other location, with possible data loss.<br /><br />
-<i>Are you sure you want to force the other user to exit?</i></h3>
+<i>Are you sure you want to force the other user to exit?</i><br /><br />
+            <span style="color: yellow">Note: to avoid this message, use the Exit function of application.</span></h3>
     <br />
     <h3 id="titolo">@Texts.Forms.Membership.Login.FormTitle</h3>
     <form id="~_Form" action="">
