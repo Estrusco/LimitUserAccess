@@ -27,7 +27,7 @@ namespace Test.Membership.Pages
         [HttpPost, JsonFilter]
         public Result<ServiceResponse> Login(LoginRequest request)
         {
-            return this.ExecuteMethod(() =>
+            return (this).ExecuteMethod(() =>
             {
                 request.CheckNotNull();
 
@@ -38,16 +38,7 @@ namespace Test.Membership.Pages
 
                 if (WebSecurityHelper.Authenticate(ref username, request.Password, false))
                 {
-                    #region Limit User
-                    var entity = new LoginRow();
-                    entity.UserName = username;
-                    entity.SessionId = System.Web.HttpContext.Current.Session.SessionID;
-                    entity.LoggedIn = true;
-
-                    new LoginRepository().CreateOrUpdate(entity);
-
-                    Session["sessionid"] = System.Web.HttpContext.Current.Session.SessionID;
-                    #endregion
+                    LoginLimit.SignIn(username, Session);
 
                     return new ServiceResponse();
                 }
@@ -64,13 +55,7 @@ namespace Test.Membership.Pages
 
         public ActionResult Signout()
         {
-            #region Limit User
-            var entity = new LoginRow();
-            entity.UserName = Authorization.Username;
-            entity.SessionId = System.Web.HttpContext.Current.Session.SessionID;
-            new LoginRepository().Delete(entity); 
-            #endregion
-
+            LoginLimit.SignOut();
             Session.Abandon();
             FormsAuthentication.SignOut();
             return new RedirectResult("~/");
