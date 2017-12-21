@@ -72,5 +72,25 @@ namespace Test.Membership
             uow.Commit();
             connection.Close();
         }
+
+        /// <summary>
+        /// Remove records for UserName where the
+        /// LoggedIn flag is false.
+        /// This prevent prolification of old/unused records
+        /// </summary>
+        /// <param name="userName"></param>
+        public void CleanForUser(string userName)
+        {
+            var connection = SqlConnections.NewFor<MyRow>();
+            UnitOfWork uow = new UnitOfWork(connection);
+
+            new SqlDelete(MyRow.Fields.TableName)
+                .Where(new Criteria(MyRow.Fields.UserName) == userName &
+                       new Criteria(MyRow.Fields.LoggedIn) == 0)
+                .Execute(uow.Connection, ExpectedRows.Ignore);
+
+            uow.Commit();
+            connection.Close();
+        }
     }
 }
